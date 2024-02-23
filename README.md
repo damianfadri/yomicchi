@@ -15,12 +15,12 @@ Yomicchi is a Windows text scanning tool that enables users to view Japanese wor
 dotnet restore
 ```
 
-3. Set your Azure Computer Vision credentials in src/Yomicchi.Desktop/appsettings.json
+3. Set your Azure Computer Vision credentials in `src/Yomicchi.Desktop/appsettings.json`
 ```json
 {
   "AzureOptions": {
-    "Key": "<computer-vision-key>",
-    "Endpoint": "sample.cognitiveservices.azure.com"
+    "Endpoint": "sample.cognitiveservices.azure.com",
+    "Key": "<computer-vision-key>"
   }
 }
 ```
