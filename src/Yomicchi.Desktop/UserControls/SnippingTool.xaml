@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="Yomicchi.Desktop.UserControls.SnippingTool"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+    <Canvas Name="Canvas"
+            Visibility="{Binding Path=Visibility}"
+            MouseMove="OnCanvasMouseMove"
+            MouseDown="OnCanvasMouseDown" 
+            MouseUp="OnCanvasMouseUp">
+        <Canvas.Background>
+            <SolidColorBrush Opacity="0.01" Color="White" />
+        </Canvas.Background>
+        <Rectangle x:Name="Box"
+                   Canvas.Left="{Binding SnippedLeft}"
+                   Canvas.Top="{Binding SnippedTop}"
+                   Width="{Binding SnippedWidth}"
+                   Height="{Binding SnippedHeight}"
+                   Stroke="LightBlue" 
+                   StrokeThickness="2" />
+    </Canvas>
+</UserControl>
