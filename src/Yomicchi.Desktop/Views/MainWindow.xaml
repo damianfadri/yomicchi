@@ -1,0 +1,68 @@
+﻿<Window x:Class="Yomicchi.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        mc:Ignorable="d"
+        Title="Yomicchi"
+        Height="400"
+        Width="300"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="SourceContentTemplate">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="5,0"
+                               FontSize="16"
+                               Text="{Binding Title}" />
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="5,0"
+                               FontSize="14"
+                               FontWeight="Light"
+                               Text="{Binding Revision}" />
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="SourceTemplate">
+                <StackPanel Orientation="Horizontal">
+                    <ContentPresenter ContentTemplate="{StaticResource SourceContentTemplate}"
+                                              Content="{Binding}" />
+                </StackPanel>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <mah:ProgressRing x:Name="Loading" IsActive="{Binding IsLoading}" />
+        
+        <Grid x:Name="DictionaryGrid"
+              AllowDrop="True"
+              Drop="OnSourceDrop">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="0">
+                <TextBlock 
+                           Text="Dictionaries"
+                           FontSize="24" />
+                <TextBlock Text="Drop dictionary .zip files below to import"
+                           FontWeight="Light" 
+                           Padding="0,0,0,20"/>
+            </StackPanel>
+            <StackPanel x:Name="DictionaryListGrid"
+                        Grid.Row="1"
+                        Background="White"
+                        AllowDrop="True"
+                        Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                <ItemsControl DockPanel.Dock="Top"
+                              ItemsSource="{Binding Sources}"
+                              ItemTemplate="{StaticResource SourceTemplate}">
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
