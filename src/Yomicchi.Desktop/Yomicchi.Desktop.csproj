@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UserSecretsId>e5429b00-1b8a-476f-9e0f-344932977324</UserSecretsId>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +19,11 @@
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>
