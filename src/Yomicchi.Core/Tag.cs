@@ -8,16 +8,22 @@
         public string Name { get; }
         public string Category { get; }
         public string Color { get; }
+        public int Order { get; }
 
-        public Tag(string name) : this(name, DefaultCategory)
+        public Tag(string name) : this(name, DefaultCategory, 0)
         {
         }
 
-        public Tag(string name, string category)
+        public Tag(string name, string category) : this(name, category, 0)
+        { 
+        }
+
+        public Tag(string name, string category, int order)
         {
             Name = name;
             Category = category;
             Color = Colors.TryGetValue(Category, out var color) ? color : DefaultTagColor;
+            Order = order;
         }
     }
 }

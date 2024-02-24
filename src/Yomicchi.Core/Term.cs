@@ -32,7 +32,7 @@ namespace Yomicchi.Core
 
         public void SetTags(IEnumerable<Tag> tags)
         {
-            Tags = tags;
+            Tags = tags.OrderBy(tag => tag.Order);
         }
         public void SetInflections(IEnumerable<string> inflections)
         {

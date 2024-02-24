@@ -86,8 +86,9 @@ namespace Yomicchi.Desktop.Services
 
             var name = array[0]?.Value<string>() ?? "name";
             var category = array[1]?.Value<string>() ?? "default";
+            var order = array[2]?.Value<int>() ?? 0;
 
-            return new Tag(name, category);
+            return new Tag(name, category, order);
         }
 
         public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)

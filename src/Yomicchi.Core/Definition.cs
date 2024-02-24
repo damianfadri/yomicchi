@@ -9,7 +9,7 @@
         public Definition(Tag source, IEnumerable<Tag> partsOfSpeech, IEnumerable<string> definitions)
         {
             Source = source;
-            PartsOfSpeech = partsOfSpeech;
+            PartsOfSpeech = partsOfSpeech.OrderBy(tag => tag.Order);
             Definitions = definitions;
         }
     }
