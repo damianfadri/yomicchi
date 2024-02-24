@@ -1,27 +1,29 @@
 ﻿namespace Yomicchi.Core
 {
-    public class Tag
+    public partial class Tag
     {
+        private const string DefaultCategory = "default";
         private const string DefaultTagColor = "#8a8a91";
 
         public string Name { get; }
+        public string Category { get; }
         public string Color { get; }
+        public int Order { get; }
 
-        public Tag(string name)
+        public Tag(string name) : this(name, DefaultCategory, 0)
         {
-            Name = name;
-            Color = DefaultTagColor;
-        }
-        public Tag(string name, string category)
-        {
-            Name = name;
-            Color = GetColor(category);
         }
 
-        private string GetColor(string category)
+        public Tag(string name, string category) : this(name, category, 0)
+        { 
+        }
+
+        public Tag(string name, string category, int order)
         {
-            // TODO: Get actual color
-            return DefaultTagColor;
+            Name = name;
+            Category = category;
+            Color = Colors.TryGetValue(Category, out var color) ? color : DefaultTagColor;
+            Order = order;
         }
     }
 }

@@ -7,13 +7,18 @@ using System.Text.RegularExpressions;
 
 namespace Yomicchi.Desktop.Services
 {
-    public class TermV3Loader
+    public partial class TermV3Loader
     {
         private static readonly string DictionaryDirectory
             = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Yomicchi",
                 "Dictionaries");
+
+        [GeneratedRegex("tag_bank_.*\\.json")]
+        private static partial Regex TagBankPattern();
+        [GeneratedRegex("term_bank_.*\\.json")]
+        private static partial Regex TermBankPattern();
 
         public IEnumerable<Term> Load(string filepath)
         {
@@ -34,11 +39,22 @@ namespace Yomicchi.Desktop.Services
                 yield break;
             }
 
+
+            var tagCategories = new TagCategories();
+            foreach (var tagFile in archive.Entries.Where(
+                entry => TagBankPattern().IsMatch(entry.Name)))
+            {
+                var tags = JsonConvert.DeserializeObject<IEnumerable<Tag>>(tagFile.Read(), new TagJsonConverter())
+                    ?? new List<Tag>();
+
+                tagCategories.AddTags(tags);
+            }
+
             foreach (var termFile in archive.Entries.Where(
-                entry => Regex.IsMatch(entry.Name, "term_bank_.*\\.json")))
+                entry => TermBankPattern().IsMatch(entry.Name)))
             {
                 var terms = JsonConvert.DeserializeObject<IEnumerable<Term>>(
-                    termFile.Read(), new TermV3JsonConverter(source));
+                    termFile.Read(), new TermV3JsonConverter(source, tagCategories));
 
                 if (terms == null)
                 {
@@ -53,12 +69,43 @@ namespace Yomicchi.Desktop.Services
         }
     }
 
+    internal class TagJsonConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(Tag);
+        }
+
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
+        {
+            var array = JArray.Load(reader);
+            if (array.Count != 5)
+            {
+                throw new ArgumentException("Invalid format for tag bank.");
+            }
+
+            var name = array[0]?.Value<string>() ?? "name";
+            var category = array[1]?.Value<string>() ?? "default";
+            var order = array[2]?.Value<int>() ?? 0;
+
+            return new Tag(name, category, order);
+        }
+
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     internal class TermV3JsonConverter : JsonConverter
     {
         private readonly Source _source;
-        public TermV3JsonConverter(Source source)
+        private readonly TagCategories _categories;
+
+        public TermV3JsonConverter(Source source, TagCategories categories)
         {
             _source = source;
+            _categories = categories;
         }
 
         public override bool CanConvert(Type objectType)
@@ -80,7 +127,7 @@ namespace Yomicchi.Desktop.Services
             var partsOfSpeech = array[2]?
                 .Value<string>()?
                 .Tokenize()
-                .Select(strPartOfSpeech => new Tag(strPartOfSpeech))
+                .Select(strPartOfSpeech => _categories.GetFullTag(strPartOfSpeech))
                 .ToList();
 
             var popularityScore = array[4]?.Value<int>() ?? 0;
@@ -92,11 +139,11 @@ namespace Yomicchi.Desktop.Services
             var tags = array[7]?
                 .Value<string>()?
                 .Tokenize()
-                .Select(strTag => new Tag(strTag))
+                .Select(strTag => _categories.GetFullTag(strTag))
                 .ToList();
 
             var definition = new Definition(
-                source: new Tag(_source.Title),
+                source: new Tag(_source.Title, "dictionary"),
                 definitions: definitions ?? [],
                 partsOfSpeech: partsOfSpeech ?? []
             );
