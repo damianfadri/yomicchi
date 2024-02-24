@@ -32,11 +32,13 @@ dotnet run --project src/Yomicchi.Desktop
 
 The window should look something like this.
 
-![Yomicchi main window](./media/yomicchi-main.png)
+![Yomicchi without dictionaries](./media/yomicchi-empty.png)
 
 Yomicchi uses [the same dictionaries as Yomichan](https://foosoft.net/projects/yomichan/index.html#dictionaries). To load the dictionaries, you can drag the .zip files in the Yomicchi window. 
 
-The dictionary should appear as above when it is successfully loaded. 
+The dictionary should appear as below when it is successfully loaded. 
+
+![Yomicchi with dictionaries](./media/yomicchi-main.png)
 
 ## Usage
 Hold `Ctrl` to switch to Snipping mode. You should see your entire screen dim a little bit. While in Snipping mode, drag your mouse over the Japanese text. There should be a blue bounding box to indicate the area that will be selected.

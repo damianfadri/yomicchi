@@ -26,8 +26,10 @@ namespace Yomicchi.Desktop
         {
             base.OnSourceInitialized(e);
 
-            Left = SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth - Width;
-            Top = SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight - Height;
+            var corner = SystemParameters.WorkArea.BottomRight;
+
+            Left = corner.X - Width;
+            Top = corner.Y - Height;
 
             LoadState();
         }

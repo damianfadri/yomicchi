@@ -12,6 +12,23 @@
 
     <Window.Resources>
         <ResourceDictionary>
+            <DrawingImage x:Key="BookDrawing">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M16,16z M0,0z M1,2.828C1.885,2.458 3.154,2.059 4.388,1.935 5.718,1.801 6.846,1.998 7.5,2.687L7.5,12.433C6.565,11.903 5.38,11.83 4.287,11.94 3.107,12.06 1.917,12.401 1,12.751z M8.5,2.687C9.154,1.998 10.282,1.801 11.612,1.935 12.846,2.059 14.115,2.458 15,2.828L15,12.751C14.082,12.401 12.893,12.059 11.713,11.941 10.619,11.83 9.435,11.902 8.5,12.433z M8,1.783C7.015,0.936 5.587,0.81 4.287,0.94 2.773,1.093 1.245,1.612 0.293,2.045A0.5,0.5,0,0,0,0,2.5L0,13.5A0.5,0.5,0,0,0,0.707,13.955C1.589,13.555 3.01,13.074 4.387,12.935 5.796,12.793 6.977,13.022 7.61,13.812A0.5,0.5,0,0,0,8.39,13.812C9.023,13.022 10.204,12.793 11.612,12.935 12.99,13.074 14.412,13.555 15.293,13.955A0.5,0.5,0,0,0,16,13.5L16,2.5A0.5,0.5,0,0,0,15.707,2.045C14.755,1.612 13.227,1.093 11.713,0.94 10.413,0.809 8.985,0.936 8,1.783" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="AddSourceDrawing">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V16 H16 V0 H0 Z">
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M16,16z M0,0z M0.5,3L0.54,3.87A2,2,0,0,0,0.198,5.181L0.835,12.181A2,2,0,0,0,2.826,14L9,14 9,13 2.826,13A1,1,0,0,1,1.831,12.09L1.194,5.09A1,1,0,0,1,2.19,4L13.81,4A1,1,0,0,1,14.806,5.09L14.54,8 15.545,8 15.801,5.181A2,2,0,0,0,13.81,3L9.828,3A2,2,0,0,1,8.414,2.414L7.586,1.586A2,2,0,0,0,6.172,1L2.5,1A2,2,0,0,0,0.5,3 M6.172,2A1,1,0,0,1,6.879,2.293L7.586,3 2.19,3Q1.828,3.002,1.507,3.12L1.5,2.98A1,1,0,0,1,2.5,2z" />
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M16,16z M0,0z M13.5,9A0.5,0.5,0,0,1,14,9.5L14,11 15.5,11A0.5,0.5,0,1,1,15.5,12L14,12 14,13.5A0.5,0.5,0,1,1,13,13.5L13,12 11.5,12A0.5,0.5,0,0,1,11.5,11L13,11 13,9.5A0.5,0.5,0,0,1,13.5,9" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
             <DataTemplate x:Key="SourceContentTemplate">
                 <StackPanel Orientation="Vertical">
                     <TextBlock VerticalAlignment="Center"
@@ -27,6 +44,7 @@
             </DataTemplate>
             <DataTemplate x:Key="SourceTemplate">
                 <StackPanel Orientation="Horizontal">
+                    <Image Margin="5" Source="{StaticResource BookDrawing}" />
                     <ContentPresenter ContentTemplate="{StaticResource SourceContentTemplate}"
                                               Content="{Binding}" />
                 </StackPanel>
@@ -48,12 +66,10 @@
                         Grid.Row="0">
                 <TextBlock 
                            Text="Dictionaries"
-                           FontSize="24" />
-                <TextBlock Text="Drop dictionary .zip files below to import"
-                           FontWeight="Light" 
-                           Padding="0,0,0,20"/>
+                           FontSize="19"
+                           Padding="5,0,5,10" />
             </StackPanel>
-            <StackPanel x:Name="DictionaryListGrid"
+            <Grid x:Name="DictionaryListGrid"
                         Grid.Row="1"
                         Background="White"
                         AllowDrop="True"
@@ -61,8 +77,27 @@
                 <ItemsControl DockPanel.Dock="Top"
                               ItemsSource="{Binding Sources}"
                               ItemTemplate="{StaticResource SourceTemplate}">
+                    <ItemsControl.Style>
+                        <Style TargetType="ItemsControl">
+                            <Style.Triggers>
+                                <Trigger Property="HasItems" Value="false">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                    <Image Source="{StaticResource AddSourceDrawing}" Width="30" />
+                                                    <TextBlock Text="No dictionaries found"  HorizontalAlignment="Center" FontWeight="Bold" />
+                                                    <TextBlock Text="Drag .zip files to import"  HorizontalAlignment="Center" />
+                                                </StackPanel>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ItemsControl.Style>
                 </ItemsControl>
-            </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
