@@ -41,7 +41,7 @@ The dictionary should appear as below when it is successfully loaded.
 ![Yomicchi with dictionaries](./media/yomicchi-main.png)
 
 ## Usage
-Hold `Ctrl` to switch to Snipping mode. You should see your entire screen dim a little bit. While in Snipping mode, drag your mouse over the Japanese text. There should be a blue bounding box to indicate the area that will be selected.
+Press and Hold the `Ctrl` key to switch to Snipping mode. You should see your entire screen dim a little bit. While in Snipping mode, drag your mouse over the Japanese text. You should see a blue bounding box appear, indicating the selected area.
 
 ![Snipping mode example](./media/example-snip.png)
 
