@@ -10,8 +10,7 @@
         Height="250"
         Width="400"
         Topmost="True"
-        ResizeMode="NoResize"
-        Visibility="{Binding IsShowing, Converter={StaticResource BooleanToVisibilityConverter}}">
+        ResizeMode="NoResize">
     <Window.Resources>
         <ResourceDictionary>
             <conv:ItemIndexConverter x:Key="ItemIndexConverter" />
