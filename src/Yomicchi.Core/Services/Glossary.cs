@@ -5,11 +5,11 @@ namespace Yomicchi.Core.Services
 {
     public class Glossary
     {
-        private readonly ConcurrentDictionary<string, List<Term>> _glossary;
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<Term, Term>> _glossary;
 
         public Glossary()
         {
-            _glossary = new ConcurrentDictionary<string, List<Term>>();
+            _glossary = new ConcurrentDictionary<string, ConcurrentDictionary<Term, Term>>();
         }
 
         public void Load(IEnumerable<Term> terms)
@@ -29,22 +29,29 @@ namespace Yomicchi.Core.Services
             Trace.WriteLine($"Glossary::Lookup({keyword})");
             var search = new Normalizer(keyword);
 
-            return _glossary.GetValueOrDefault(search.NormalizedText) ?? [];
+            return _glossary.GetValueOrDefault(search.NormalizedText)?.Values ?? [];
         }
 
         private void InsertOrAddDefinitions(string key, Term term)
         {
-            var existingTerms = _glossary.GetValueOrDefault(key) ?? [];
-            if (existingTerms.Count == 0)
+            if (string.IsNullOrWhiteSpace(key))
             {
-                _glossary.TryAdd(key, [term]);
                 return;
             }
 
-            var foundTerm = existingTerms.FirstOrDefault(existingTerm => existingTerm.Equals(term));
-            if (foundTerm == null)
+            var existingTerms = _glossary.GetValueOrDefault(key) ?? [];
+            if (existingTerms.Count == 0)
             {
-                _glossary.TryAdd(key, [term]);
+                var content = new ConcurrentDictionary<Term, Term>();
+                content.TryAdd(term, term);
+
+                _glossary.TryAdd(key, content);
+                return;
+            }
+
+            if (!existingTerms.TryGetValue(term, out var foundTerm))
+            {
+                existingTerms.TryAdd(term, term);
                 return;
             }
 
