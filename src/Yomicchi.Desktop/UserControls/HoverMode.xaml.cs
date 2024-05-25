@@ -11,6 +11,8 @@ namespace Yomicchi.Desktop.UserControls
     /// </summary>
     public partial class HoverMode : UserControl
     {
+        private static readonly ModifierKeys FLAG_KEY = ModifierKeys.Shift;
+
         public delegate void ModeChangedEventHandler(object? sender, ModeChangedEventArgs args);
 
         private readonly DispatcherTimer _timer;
@@ -43,7 +45,7 @@ namespace Yomicchi.Desktop.UserControls
 
         private void OnTick(object? sender, EventArgs e)
         {
-            if (!_enabled && Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            if (!_enabled && Keyboard.Modifiers.HasFlag(FLAG_KEY))
             {
                 _enabled = true;
 
@@ -55,7 +57,7 @@ namespace Yomicchi.Desktop.UserControls
                 return;
             }
 
-            if (_enabled && !Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
+            if (_enabled && !Keyboard.Modifiers.HasFlag(FLAG_KEY))
             {
                 _enabled = false;
 
