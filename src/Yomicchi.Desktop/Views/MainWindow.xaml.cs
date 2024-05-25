@@ -1,6 +1,7 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Windows;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Yomicchi.Core;
 using Yomicchi.Core.ViewModels;
 using Yomicchi.Desktop.Services;
@@ -64,29 +65,26 @@ namespace Yomicchi.Desktop
                 var termLoader = new TermV3Loader();
                 var indexLoader = new IndexLoader();
 
-                var terms = new List<IEnumerable<Term>>();
-                var termSources = new List<Source>();
+                var termSources = new ConcurrentBag<Source>();
 
-                foreach (var source in sources)
+                Parallel.ForEach(sources, source =>
                 {
                     if (source == null)
                     {
-                        continue;
+                        return;
                     }
 
                     var currSource = indexLoader.Load(source.Filepath);
                     if (currSource == null)
                     {
-                        continue;
+                        return;
                     }
 
-                    var currTerms = termLoader.Load(source.Filepath);
+                    _viewModel.LoadTerms(
+                        termLoader.Load(source.Filepath));
 
-                    terms.Add(currTerms);
                     termSources.Add(currSource);
-                }
-
-                _viewModel.LoadTerms(terms.SelectMany(term => term));
+                });
 
                 App.Current.Dispatcher.Invoke(() =>
                 {
