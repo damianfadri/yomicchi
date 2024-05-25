@@ -23,11 +23,15 @@ namespace Yomicchi.Core
             Expression = GetSegments(text, reading);
 
             PopularityScore = popularityScore;
-            Definitions = new List<Definition>();
+            Definitions = [];
         }
+
         public void AddDefinition(Definition definition)
         {
-            Definitions.Add(definition);
+            if (!Definitions.Contains(definition))
+            {
+                Definitions.Add(definition);
+            }
         }
 
         public void SetTags(IEnumerable<Tag> tags)
